@@ -1,0 +1,62 @@
+<style scoped>
+.menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.menu i {
+    margin-top: 0.5rem;
+}
+</style>
+<template>
+    <div>
+        <van-notice-bar text="‘小庞有赞’，分享「汽车」的新鲜事，已为你推荐8条新内容" left-icon="volume-o" />
+        <van-row>
+            <van-col span="24">
+                <van-search placeholder="请输入搜索关键词" v-model="searchValue" />
+            </van-col>
+            <!-- <van-col span="4" class="menu">
+                <van-icon name="wap-nav" size="2rem" color="#c3c3c3" />
+            </van-col>-->
+        </van-row>
+
+        <van-tabs v-model="active" :sticky="true">
+            <van-tab title="首页">
+                <car-home></car-home>
+            </van-tab>
+            <van-tab title="选车">
+                <check-car></check-car>
+            </van-tab>
+            <van-tab title="车友圈">内容 3</van-tab>
+            <van-tab title="排行榜">内容 4</van-tab>
+        </van-tabs>
+    </div>
+</template>
+
+<script>
+import { Tab, Tabs, Search, Row, Col, Icon, Image, NoticeBar } from "vant";
+import CarHome from "@/component/do-car/home";
+import CheckCar from "@/component/do-car/checkCar";
+const imageCar = require("../../images/icon/car.png");
+export default {
+    components: {
+        [Tab.name]: Tab,
+        [Tabs.name]: Tabs,
+        [Search.name]: Search,
+        [Row.name]: Row,
+        [Col.name]: Col,
+        [Icon.name]: Icon,
+        [Image.name]: Image,
+        [NoticeBar.name]: NoticeBar,
+        CarHome,
+        CheckCar
+    },
+    data() {
+        return {
+            active: 0,
+            searchValue: "",
+            imageCar: imageCar
+        };
+    }
+};
+</script>

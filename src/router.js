@@ -6,7 +6,21 @@ Vue.use(Router);
 const routes = [
   {
     path: '*',
-    redirect: '/goods'
+    redirect: '/car'
+  },
+  {
+    name: 'car',
+    component: () => import('./view/do-car'),
+    meta: {
+      title: '懂车'
+    }
+  },
+  {
+    name: 'home',
+    component: () => import('./view/home'),
+    meta: {
+      title: '首页'
+    }
   },
   {
     name: 'user',
