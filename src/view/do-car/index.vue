@@ -27,8 +27,10 @@
             <van-tab title="选车">
                 <check-car></check-car>
             </van-tab>
-            <van-tab title="车友圈">内容 3</van-tab>
-            <van-tab title="排行榜">内容 4</van-tab>
+            <van-tab title="车友圈">车友圈</van-tab>
+            <van-tab title="排行榜">
+                <rank></rank>
+            </van-tab>
         </van-tabs>
     </div>
 </template>
@@ -37,6 +39,7 @@
 import { Tab, Tabs, Search, Row, Col, Icon, Image, NoticeBar } from "vant";
 import CarHome from "@/component/do-car/home";
 import CheckCar from "@/component/do-car/checkCar";
+import Rank from "@/component/do-car/Rank";
 const imageCar = require("../../images/icon/car.png");
 export default {
     components: {
@@ -49,11 +52,12 @@ export default {
         [Image.name]: Image,
         [NoticeBar.name]: NoticeBar,
         CarHome,
-        CheckCar
+        CheckCar,
+        Rank
     },
     data() {
         return {
-            active: 0,
+            active: 3,
             searchValue: "",
             imageCar: imageCar
         };
