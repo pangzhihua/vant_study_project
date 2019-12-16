@@ -45,6 +45,11 @@
     align-items: center;
     min-width: 34px;
 }
+.wgt-car-rank .rank-medal {
+    font-style: normal;
+    font-size: 20px;
+    font-weight: 700;
+}
 .wgt-car-rank .rank-medal-0 {
     width: 32px;
     height: 32px;
@@ -122,7 +127,7 @@
 </style>
 <template>
     <div>
-        <van-tabs class="my_tabs" sticky>
+        <van-tabs class="my_tabs" v-model="active" @change="onMyTabs" sticky>
             <!-- <div>12313</div> -->
             <van-tab v-for="value in carHead" :key="value.name" :title="value.name">
                 <van-list
@@ -132,9 +137,9 @@
                     finished-text="没有更多了"
                     @load="onLoad"
                 >
-                    <a class="rank-item" v-for="item in list" :key="item.series_id">
+                    <a class="rank-item" v-for="(item,i) in list" :key="i">
                         <div class="rank-info">
-                            <i class="rank-medal rank-medal-0">{{item.rank}}</i>
+                            <i class="rank-medal" :class="'rank-medal-'+i">{{item.rank}}</i>
                             <p
                                 class="rank-change-wrap"
                                 :class="{ 'rank-up': item.last_rank-item.rank>0, 'rank-down': item.last_rank-item.rank<0,'rank-equal':item.last_rank-item.rank==0 }"
@@ -144,13 +149,7 @@
                                 >{{Math.abs(item.last_rank-item.rank)>0?Math.abs(item.last_rank-item.rank)+"名":""}}</span>
                             </p>
                         </div>
-                        <img
-                            class="rank-car-img"
-                            width="125"
-                            height="84"
-                            :src="item.image"
-                            alt=""
-                        />
+                        <img class="rank-car-img" width="125" height="84" :src="item.image" alt />
                         <div class="rank-car-info">
                             <p class="car-name">{{item.series_name}}</p>
                             <p class="car-price">{{item.min_price}}-{{item.max_price}}万</p>
@@ -173,11 +172,17 @@ export default {
     },
     data() {
         return {
-            carHead: [{ name: "轿车" }, { name: "SUV" }, { name: "MPV" }],
+            active: 0,
+            carHead: [
+                { name: "轿车", type: 100, list: [], offset: 0 },
+                { name: "SUV", type: 200, list: [], offset: 0 },
+                { name: "MPV", type: 300, list: [], offset: 0 }
+            ],
             list: [],
             loading: false,
             finished: false,
-            offset: 0
+            offset: 0,
+            rank_type: 100
         };
     },
     created() {},
@@ -186,27 +191,44 @@ export default {
             let that = this;
             this.$http
                 .get(
-                    "/api/motor/car_show/v1/get_rank/?rank_type=100&offset=" +
+                    "/api/motor/car_show/v1/get_rank/?rank_type=" +
+                        this.rank_type +
+                        "&offset=" +
                         this.offset +
                         "&limit=10&city_name=%E5%8C%97%E4%BA%AC"
                 )
                 .then(function(response) {
                     console.log(response.data);
+                    
+                    // 数据全部加载完成
+                    if (!response.data.data.length) {
+                        that.finished = true;
+                        return;
+                    }
                     response.data.data.forEach(v => {
-                        that.list.push(v);
+                        that.carHead[that.active].list.push(v);
                     });
-                    that.offset++;
+                    that.list = that.carHead[that.active].list;
+                    that.offset = that.list.length;
+
                     // 加载状态结束
                     that.loading = false;
-
-                    // 数据全部加载完成
-                    if (that.list.length >= 40) {
-                        that.finished = true;
-                    }
                 })
                 .catch(function(error) {
+                    // that.finished = true;
+                    // that.loading = false;
                     console.log(error);
                 });
+        },
+        onMyTabs(name, title) {
+            this.rank_type = this.carHead[name].type;
+            console.log(this.carHead[name]);
+            this.offset = this.carHead[name].list.length;
+            this.list = this.carHead[name].list;
+            this.loading = false;
+            if (this.list.length < 100) {
+                this.finished = false;
+            }
         }
     }
 };
