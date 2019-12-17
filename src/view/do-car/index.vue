@@ -7,6 +7,10 @@
 .menu i {
     margin-top: 0.5rem;
 }
+p {
+    -webkit-margin-before: 0;
+    -webkit-margin-after: 0;
+}
 </style>
 <template>
     <div>
